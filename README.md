@@ -1,78 +1,168 @@
-# UD-Pivot
-A powershell version of https://github.com/plotly/react-pivottable
+﻿# UniversalDashboard.Pivot
 
-## Please Note
+> Currently under development or in the process of being set up...
 
-The version on the powershell gallery I called **New-UDPivotTable** the exact same rules apply apart from the function name.
+A modern PowerShell Universal custom component based on
+[`react-pivottable`](https://github.com/plotly/react-pivottable).
 
-## My Reason For This Component
+This module enables interactive pivot tables with drag & drop functionality directly inside PowerShell Universal dashboards.
 
-At my work I always seem to find that I have to put the raw data into a prettier format.  Obviously UniversalDashboard 
-does a great job in making this happen.  But for instance when it comes to the sales team and you show them a grid 
-but that grid has 1420 results or more, then you have to show them how to to export that data to excel, then all the 
-steps involved to put that into a pivot table within excel. Just so they can have the data grouped better and not so
-many rows to digest. Well you know they are not going to remember, or simply carry on asking you. So this is how I plan
-to tackle that issue through the use of New-UDPivot an interactive dynamic pivot table/graph component.
+---
+
+## Features
+
+- Interactive pivot table UI (drag & drop)
+- Based on the latest `react-pivottable` (React 19 compatible)
+- Works with PowerShell Universal (PSU)
+- Supports:
+  - Rows
+  - Columns
+  - Values
+  - Aggregations
+- Accepts PowerShell objects directly
+
+---
+
+## Background
+
+This project is a **complete rewrite and modernization** of the original:
+
+👉 https://github.com/psDevUK/UD-Pivot
+
+The original module is based on an outdated version of Universal Dashboard and React.
+
+This version:
+
+- updates dependencies to modern React
+- rebuilds the component using current PSU custom component standards
+- ensures compatibility with current PSU versions (5.6.x+ / 2026.x)
+
+---
+
+## Installation
+
+> For now, manual way
+
+### Requirements
+
+- Node.js (incl. npm)
+- PowerShell Universal
+- PowerShell (for Invoke-Build)
+
+---
+
+### Build the component
+
+Clone the repository and run:
+
+```
+Invoke-Build
+```
+
+This will:
+
+- install npm dependencies
+- build the JavaScript bundle
+- package the PowerShell module
+
+The final module will be generated in:
+
+```
+/output/
+```
+
+---
+
+### Option 1 – Manual (recommended for testing)
+
+Copy the module from `output` folder into your PSU repository:
+
+```
+<PSU Repository>/Components/UniversalDashboard.Pivot/1.0.0
+```
+
+Ensure the folder contains:
+
+```
+index.<hash>.bundle.js
+UniversalDashboard.Pivot.psd1
+UniversalDashboard.Pivot.psm1
+```
+
+Restart PowerShell Universal.
+
+---
+
+### Option 2 – As PowerShell Module (future)
+
+Planned: installation via `Modules` directory or PSGallery.
+
+---
+
+## Usage
+
+### Example
+
+```powershell
+$Data = @(
+    @{ Team = 'OPS'; Status = 'Open'; Priority = 'High'; Count = 5 }
+    @{ Team = 'OPS'; Status = 'Closed'; Priority = 'Low'; Count = 2 }
+    @{ Team = 'DEV'; Status = 'Open'; Priority = 'High'; Count = 8 }
+    @{ Team = 'DEV'; Status = 'Closed'; Priority = 'Medium'; Count = 3 }
+)
+
+New-UDPivot `
+    -Id 'pivot-demo' `
+    -Data $Data `
+    -Rows @('Team') `
+    -Cols @('Status') `
+    -Vals @('Count') `
+    -AggregatorName 'Count' `
+    -RendererName 'Table'
+```
+
+---
 
 ## Parameters
 
-* **-Data** This is the only parameter in this component this is a mandatory paramater, as without this being supplied there will be no data to display
+| Parameter        | Description                                  |
+| ---------------- | -------------------------------------------- |
+| `Data`           | Input data (array of objects or scriptblock) |
+| `Rows`           | Row fields                                   |
+| `Cols`           | Column fields                                |
+| `Vals`           | Value fields                                 |
+| `AggregatorName` | Aggregation function (e.g. Count, Sum)       |
+| `RendererName`   | Renderer type (e.g. Table)                   |
 
-## The Data Parameter Has To Be A HashTable
+---
 
-So the trick with passing the data to this component is it has to be in a hashtable format. This component works wonders
-displaying SQL data, but for this example I will show how to put the output of **get-process** into a hashtable
+## Known Limitations
 
-```
- $Processes = Get-Process | sort-object CPU -Descending | Name, CPU, WorkingSet, VirtualMemorySize, StartTime
-                $DataHash = @()
-                foreach ($item in $Processes) {
-                    $DataHash += @{
-                        Name              = $item.Name
-                        CPU               = $item.CPU
-                        WorkingSet        = $item.WorkingSet
-                        VirtualMemorySize = $item.VirtualMemorySize
-                        StartTime         = $item.StartTime
-                    }
-                }
-```
-Now the variable **$DataHash** can be passed to the component like so
-**New-UDPivot -Data {$DataHash}**
-Literally that's is all there is to passing the data to this component
+- Only table renderer currently enabled
+- Plotly charts not yet integrated
+- Not all `react-pivottable` props exposed yet
+- No powershell module will be created / published to gallery
 
-## Demo Of The Component
+---
 
-```
-Import-Module -Name UniversalDashboard
-Import-Module -Name UniversalDashboard.UDPivot
-Get-UDDashboard | Stop-UDDashboard
-$theme = Get-UDTheme -Name Default
-Start-UDDashboard -Port 1000 -AutoReload -Dashboard (
-    New-UDDashboard -Title "Powershell UniversalDashboard" -Theme $theme -Content {
-        New-UDRow -Columns {
-            New-UDColumn -Size 8 -Content {
-###For DEMO purposes selecting the top 4 CPU processes on my local machine###            
-                $Processes = Get-Process | sort-object CPU -Descending | Select-Object -first 4 Name, CPU, WorkingSet, VirtualMemorySize, StartTime
-###Now we need to convert the data we want to show in New-UDPivot into a hashtable, so for this example that would be####
-                $hash = @()
-                foreach ($item in $Processes) {
-                    $hash += @{
-                        Name              = $item.Name
-                        CPU               = $item.CPU
-                        WorkingSet        = $item.WorkingSet
-                        VirtualMemorySize = $item.VirtualMemorySize
-                        StartTime         = $item.StartTime
-                    }
-                }
-###Once you have all your data in a hashtable format simply pass that to New-UDPivot -Data parameter in a scriptblock###
-                New-UDPivot -Data { $hash }
-            }
-        }
+## Roadmap
 
-    }
-)
-```
+- [ ] Add support for additional PivotTableUI props
+- [ ] Add Plotly renderers
+- [ ] Improve styling / theming integration with PSU
+- [ ] Publish as installable module
+- [ ] Add full documentation
 
-Then simply drag and drop for how you wish your data to be displayed.
+---
 
-![placeholder](https://github.com/psDevUK/UD-Pivot/blob/master/pivot3.gif "Example")
+## Credits
+
+- [`react-pivottable`](https://github.com/plotly/react-pivottable)
+- [`PivotTable.js`](https://pivottable.js.org/)
+- PowerShell Universal / Universal Dashboard ecosystem
+
+---
+
+## License
+
+[MIT (same as react-pivottable)](LICENSE)

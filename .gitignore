@@ -1,0 +1,34 @@
+﻿# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build artifacts
+public/
+output/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs
+logs
+*.log
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Env
+.env
+
+# PowerShell build artifacts (optional)
+*.psm1~
+*.psd1~
+
+# Temporary
+*.tmp
+*.cache

@@ -14,11 +14,14 @@ This module enables interactive pivot tables with drag & drop functionality dire
 - Interactive pivot table UI (drag & drop)
 - Based on the latest `react-pivottable` (React 19 compatible)
 - Works with PowerShell Universal (PSU)
+- Minimal required input: `Data`
 - Supports:
   - Rows
   - Columns
   - Values
   - Aggregations
+  - Filtering
+  - Sorting
 - Accepts PowerShell objects directly
 
 ---
@@ -68,7 +71,7 @@ This will:
 The final module will be generated in:
 
 ```
-/output/
+/output/<version>/
 ```
 
 ---
@@ -78,7 +81,7 @@ The final module will be generated in:
 Copy the module from `output` folder into your PSU repository:
 
 ```
-<PSU Repository>/Components/UniversalDashboard.Pivot/1.0.0
+<PSU Repository>/Components/UniversalDashboard.Pivot/<version>
 ```
 
 Ensure the folder contains:
@@ -103,7 +106,7 @@ Planned: installation via `Modules` directory or PSGallery.
 
 ### Example
 
-```powershell
+```
 $Data = @(
     @{ Team = 'OPS'; Status = 'Open'; Priority = 'High'; Count = 5 }
     @{ Team = 'OPS'; Status = 'Closed'; Priority = 'Low'; Count = 2 }
@@ -117,7 +120,7 @@ New-UDPivot `
     -Rows @('Team') `
     -Cols @('Status') `
     -Vals @('Count') `
-    -AggregatorName 'Count' `
+    -AggregatorName 'Sum' `
     -RendererName 'Table'
 ```
 
@@ -125,14 +128,62 @@ New-UDPivot `
 
 ## Parameters
 
-| Parameter        | Description                                  |
-| ---------------- | -------------------------------------------- |
-| `Data`           | Input data (array of objects or scriptblock) |
-| `Rows`           | Row fields                                   |
-| `Cols`           | Column fields                                |
-| `Vals`           | Value fields                                 |
-| `AggregatorName` | Aggregation function (e.g. Count, Sum)       |
-| `RendererName`   | Renderer type (e.g. Table)                   |
+### Required
+
+| Parameter | Description                                  |
+| --------- | -------------------------------------------- |
+| `Data`    | Input data (array of objects or scriptblock) |
+
+---
+
+### Core
+
+| Parameter        | Description                            |
+| ---------------- | -------------------------------------- |
+| `Id`             | Component ID                           |
+| `Rows`           | Row fields                             |
+| `Cols`           | Column fields                          |
+| `Vals`           | Value fields                           |
+| `AggregatorName` | Aggregation function (e.g. Count, Sum) |
+| `RendererName`   | Renderer type (e.g. Table)             |
+
+---
+
+### UI / Behavior
+
+| Parameter                 | Description                                    |
+| ------------------------- | ---------------------------------------------- |
+| `HiddenAttributes`        | Hide attributes from UI                        |
+| `HiddenFromAggregators`   | Hide attributes from aggregator dropdown       |
+| `HiddenFromDragDrop`      | Hide attributes from drag & drop area          |
+| `MenuLimit`               | Max values shown in filter menu (default: 500) |
+| `UnusedOrientationCutoff` | Layout switch threshold (default: 85)          |
+
+---
+
+### Ordering
+
+| Parameter  | Description                                                      |
+| ---------- | ---------------------------------------------------------------- |
+| `RowOrder` | Row sort order (`key_a_to_z`, `value_a_to_z`, `value_z_to_a`)    |
+| `ColOrder` | Column sort order (`key_a_to_z`, `value_a_to_z`, `value_z_to_a`) |
+
+---
+
+### Filtering
+
+| Parameter     | Description                     |
+| ------------- | ------------------------------- |
+| `ValueFilter` | Predefined filter configuration |
+
+---
+
+## Notes
+
+- Only `Data` is required; all other parameters are optional
+- The component follows the behavior of `react-pivottable`
+- The `Count` aggregator does **not require `Vals`**
+- For numeric aggregation (e.g. Sum), use a value field
 
 ---
 
@@ -141,7 +192,8 @@ New-UDPivot `
 - Only table renderer currently enabled
 - Plotly charts not yet integrated
 - Not all `react-pivottable` props exposed yet
-- No powershell module will be created / published to gallery
+- No export functionality included yet
+- No powershell module will be created / published to gallery (current state)
 
 ---
 
@@ -150,7 +202,7 @@ New-UDPivot `
 - [ ] Add support for additional PivotTableUI props
 - [ ] Add Plotly renderers
 - [ ] Improve styling / theming integration with PSU
-- [ ] Publish as installable module
+- [ ] Add export functionality (CSV / Excel)
 - [ ] Add full documentation
 
 ---

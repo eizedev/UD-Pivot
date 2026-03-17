@@ -97,7 +97,11 @@ export default function PivotTable(props) {
         <div id={props.id}>
             <PivotTableUI
                 {...pivotState}
-                onChange={(state) => setPivotState(state)}
+                onChange={(state) => {
+                    if (state && typeof state === "object") {
+                        setPivotState(state);
+                    }
+                }}
             />
         </div>
     );

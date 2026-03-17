@@ -1,11 +1,10 @@
 {
     "name": "universal-dashboard-pivot",
     "version": "1.0.0",
-    "description": "Pivot table custom component for PowerShell Universal",
+    "description": "Pivot table custom component for PowerShell Universal based on react-pivottable.",
     "main": "index.js",
     "scripts": {
-        "build": "webpack",
-        "dev": "webpack --mode development"
+        "build": "webpack"
     },
     "keywords": [
         "powershell-universal",

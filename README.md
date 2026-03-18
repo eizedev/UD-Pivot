@@ -192,7 +192,7 @@ This version:
 
 <!-- Badge references -->
 [psgallery-badge]: https://img.shields.io/powershellgallery/dt/UniversalDashboard.Pivot.svg
-[psgallery-version]: https://img.shields.io/powershellgallery/v/IUniversalDashboard.Pivot.svg
+[psgallery-version]: https://img.shields.io/powershellgallery/v/UniversalDashboard.Pivot.svg
 [psgallery]: https://www.powershellgallery.com/packages/UniversalDashboard.Pivot
 [license-badge]: https://img.shields.io/github/license/eizedev/UD-Pivot.svg
 [license]: LICENSE

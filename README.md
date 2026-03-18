@@ -5,7 +5,7 @@ A modern PowerShell Universal custom component based on
 
 This module enables interactive pivot tables with drag & drop functionality directly inside PowerShell Universal dashboards.
 
-![Showcase](docs\demo.gif)
+![Showcase](docs/demo.gif)
 
 ---
 

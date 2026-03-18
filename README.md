@@ -1,7 +1,16 @@
 ﻿# UniversalDashboard.Pivot
 
-A modern PowerShell Universal custom component based on
-[`react-pivottable`](https://github.com/plotly/react-pivottable).
+<!-- === Badges: Core status & distribution === -->
+| PS Gallery (downloads + version)                                                                          | License                              | Issues / PRs                                                              |
+| --------------------------------------------------------------------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------- |
+| [![PowerShell Gallery][psgallery-badge]][psgallery] [![PS Gallery Version][psgallery-version]][psgallery] | [![License][license-badge]][license] | [![Open Issues][issues-badge]][issues] [![Open PRs][prs-badge]][prs-link] |
+
+<!-- === Badges: Quality & health (slim) === -->
+| Runtime (pwsh)                    | Platforms                     |
+| --------------------------------- | ----------------------------- |
+| ![pwsh 5.1+ incl. 7+][pwsh-badge] | ![Platforms][platforms-badge] |
+
+A modern PowerShell Universal custom component based on [`react-pivottable`](https://github.com/plotly/react-pivottable).
 
 This module enables interactive pivot tables with drag & drop functionality directly inside PowerShell Universal dashboards.
 
@@ -47,66 +56,26 @@ This version:
 
 ## Installation
 
-> For now, manual way
+### From PowerShell Gallery
 
-### Requirements
+```powershell
+Install-Module -Name UniversalDashboard.Pivot
+```
 
-- Node.js (incl. npm)
-- PowerShell Universal
-- PowerShell (for Invoke-Build)
-
----
-
-### Build the component
+### Manual Installation
 
 👉 For detailed setup steps (especially on fresh systems), see:
 [docs/BUILD.md](docs/BUILD.md)
 
-Clone the repository and run:
+1. Download or clone this repository
+2. Build the project (see [BUILD](docs\BUILD.md) section)
+3. Copy the contents of the `output` folder to your PowerShell Universal modules/components directory or use `Import-Module`:
+  3.1 Components (old way): `<PSU Repository>/Components/UniversalDashboard.Pivot/<version>`
+  3.2 Modules: `<PSU Repository>/Modules/UniversalDashboard.Pivot/<version>`
 
+```powershell
+Import-Module .\output\UniversalDashboard.Pivot.psd1
 ```
-Invoke-Build
-```
-
-This will:
-
-- install npm dependencies
-- build the JavaScript bundle
-- package the PowerShell module
-
-The final module will be generated in:
-
-```
-/output/<version>/
-```
-
----
-
-### Option 1 – Manual (recommended for testing)
-
-Copy the module from `output` folder into your PSU repository:
-
-```
-<PSU Repository>/Components/UniversalDashboard.Pivot/<version>
-```
-
-Ensure the folder contains:
-
-```
-index.<hash>.bundle.js
-UniversalDashboard.Pivot.psd1
-UniversalDashboard.Pivot.psm1
-```
-
-Restart PowerShell Universal.
-
----
-
-### Option 2 – As PowerShell Module (future)
-
-Planned: installation via `Modules` directory or PSGallery.
-
----
 
 ## Usage
 
@@ -221,3 +190,20 @@ To suit my personal needs, I used CSS to give the Pivot component a different lo
 ## License
 
 [MIT (same as react-pivottable)](LICENSE)
+
+<!-- Badge references -->
+[psgallery-badge]: https://img.shields.io/powershellgallery/dt/UniversalDashboard.Pivot.svg
+[psgallery-version]: https://img.shields.io/powershellgallery/v/PSIUniversalDashboard.Pivot.svg
+[psgallery]: https://www.powershellgallery.com/packages/UniversalDashboard.Pivot
+[license-badge]: https://img.shields.io/github/license/eizedev/UD-Pivot.svg
+[license]: LICENSE
+[issues-badge]: https://img.shields.io/github/issues-raw/eizedev/UD-Pivot.svg
+[issues]: https://github.com/eizedev/UniversalDashboard.Pivot/issues
+[prs-badge]: https://img.shields.io/github/issues-pr/eizedev/UD-Pivot.svg
+[prs-link]: https://github.com/eizedev/UD-Pivot/pulls
+[lastcommit-badge]: https://img.shields.io/github/last-commit/eizedev/UD-Pivot.svg
+[repo]: https://github.com/eizedev/UD-Pivot
+
+[pwsh-badge]: https://img.shields.io/badge/pwsh-7%2B-blue?logo=powershell
+[platforms-badge]: https://img.shields.io/badge/platforms-Windows%20%7C%20Linux%20%7C%20macOS-informational
+

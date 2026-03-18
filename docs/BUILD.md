@@ -14,10 +14,9 @@ If you are setting this up on a fresh system or want the full process from sourc
 
 Make sure the following tools are installed and available in your shell:
 
-- Node.js
-- npm
-- PowerShell
+- Node.js (incl. npm)
 - PowerShell Universal
+- PowerShell (for Invoke-Build)
 
 Recommended:
 
@@ -47,16 +46,24 @@ Important files and folders:
 
 ---
 
-## 1. Clone the Repository
+## 1. Install Invoke-Build and clone the Repository
+
+Install InvokeBuild if you haven't already:
+
+```powershell
+Install-Module -Name InvokeBuild -Scope CurrentUser
+```
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/eizedev/UD-Pivot.git
 cd UD-Pivot
 ```
 
 ---
 
 ## 2. Install Dependencies
+
+> You can also skip to 4. if you only want to use `Invoke-Build`
 
 Install all required npm packages:
 
@@ -171,7 +178,7 @@ Import the component module in your PSU app or page:
 > It should be automatically imported if using the `Components` (or better) `Modules` folder inside your Repository.
 
 ```powershell
-Import-Module UniversalDashboard.Pivot
+Import-Module UniversalDashboard.Pivot -Force
 ```
 
 Minimal example:

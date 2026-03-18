@@ -65,6 +65,48 @@ function buildAttributeMap(data) {
 }
 
 /*
+ * Build a case-insensitive lookup of attribute values based on the dataset.
+ *
+ * ValueFilter must match the actual string values used in the dataset.
+ * This lookup allows PowerShell filters such as "open" to resolve to "Open"
+ * when the dataset contains capitalized values.
+ */
+function buildAttributeValueMap(data) {
+    const attributeValueMap = {};
+
+    if (!Array.isArray(data)) {
+        return attributeValueMap;
+    }
+
+    data.forEach((row) => {
+        if (!row || typeof row !== "object" || Array.isArray(row)) {
+            return;
+        }
+
+        Object.keys(row).forEach((key) => {
+            const attributeKey = String(key).toLowerCase();
+            const rawValue = row[key];
+
+            if (rawValue === null || rawValue === undefined) {
+                return;
+            }
+
+            const valueKey = String(rawValue).toLowerCase();
+
+            if (!attributeValueMap[attributeKey]) {
+                attributeValueMap[attributeKey] = {};
+            }
+
+            if (!attributeValueMap[attributeKey][valueKey]) {
+                attributeValueMap[attributeKey][valueKey] = String(rawValue);
+            }
+        });
+    });
+
+    return attributeValueMap;
+}
+
+/*
  * Resolve attribute names against the actual dataset keys.
  *
  * This ensures that preset properties and interactive changes always reference
@@ -78,13 +120,14 @@ function resolveAttributeNames(values, attributeMap) {
 }
 
 /*
- * Normalize the valueFilter object and resolve attribute names against the dataset.
+ * Normalize the valueFilter object and resolve both attribute names and attribute values
+ * against the actual dataset content.
  *
- * PivotTableUI expects a plain object keyed by attribute names. The filter keys
- * must match the actual dataset keys, otherwise the filter state appears in the
- * UI but does not apply correctly to the underlying data.
+ * PivotTableUI expects a plain object keyed by attribute names and value names
+ * exactly as they exist in the dataset. If casing differs, the filter state may
+ * appear in the UI but will not affect computation and rendering correctly.
  */
-function normalizeValueFilter(value, attributeMap) {
+function normalizeValueFilter(value, attributeMap, attributeValueMap) {
     if (!value || typeof value !== "object" || Array.isArray(value)) {
         return {};
     }
@@ -99,11 +142,15 @@ function normalizeValueFilter(value, attributeMap) {
         }
 
         const resolvedAttributeName = attributeMap[String(attributeName).toLowerCase()] || String(attributeName);
+        const attributeKey = String(resolvedAttributeName).toLowerCase();
 
         normalizedFilter[resolvedAttributeName] = {};
 
         Object.keys(attributeFilter).forEach((attributeValue) => {
-            normalizedFilter[resolvedAttributeName][String(attributeValue)] = Boolean(attributeFilter[attributeValue]);
+            const resolvedAttributeValue =
+                attributeValueMap[attributeKey]?.[String(attributeValue).toLowerCase()] || String(attributeValue);
+
+            normalizedFilter[resolvedAttributeName][resolvedAttributeValue] = Boolean(attributeFilter[attributeValue]);
         });
     });
 
@@ -123,13 +170,13 @@ export default function PivotTable(props) {
     const safeUnusedOrientationCutoff = Number.isInteger(props.unusedOrientationCutoff) ? props.unusedOrientationCutoff : 85;
 
     /*
-     * Build a case-insensitive lookup based on the current dataset.
+     * Build case-insensitive lookups based on the current dataset.
      *
-     * This lookup is reused for preset values, hidden attribute settings and
-     * value filters so that all attribute-based configuration uses the same
-     * resolved dataset keys.
+     * These lookups are reused for attribute-based configuration and filters
+     * so that all preset values resolve against the same dataset structure.
      */
     const attributeMap = useMemo(() => buildAttributeMap(safeData), [safeData]);
+    const attributeValueMap = useMemo(() => buildAttributeValueMap(safeData), [safeData]);
 
     /*
      * Resolve attribute-based UI settings against the actual dataset keys.
@@ -161,7 +208,7 @@ export default function PivotTable(props) {
         vals: resolveAttributeNames(props.vals, attributeMap),
         aggregatorName: props.aggregatorName ? String(props.aggregatorName) : "Count",
         rendererName: props.rendererName ? String(props.rendererName) : "Table",
-        valueFilter: normalizeValueFilter(props.valueFilter, attributeMap),
+        valueFilter: normalizeValueFilter(props.valueFilter, attributeMap, attributeValueMap),
         rowOrder: props.rowOrder ? String(props.rowOrder) : "key_a_to_z",
         colOrder: props.colOrder ? String(props.colOrder) : "key_a_to_z"
     }), [
@@ -173,7 +220,8 @@ export default function PivotTable(props) {
         props.valueFilter,
         props.rowOrder,
         props.colOrder,
-        attributeMap
+        attributeMap,
+        attributeValueMap
     ]);
 
     /*
@@ -199,7 +247,7 @@ export default function PivotTable(props) {
      * Render PivotTableUI with normalized stable props and interactive state.
      *
      * onChange normalizes attribute-based values again so that interactive
-     * changes continue to match the resolved dataset keys.
+     * changes continue to match the resolved dataset keys and values.
      */
     return (
         <div id={props.id}>
@@ -222,7 +270,7 @@ export default function PivotTable(props) {
                             vals: resolveAttributeNames(state.vals, attributeMap),
                             aggregatorName: state.aggregatorName ? String(state.aggregatorName) : currentState.aggregatorName,
                             rendererName: state.rendererName ? String(state.rendererName) : currentState.rendererName,
-                            valueFilter: normalizeValueFilter(state.valueFilter, attributeMap),
+                            valueFilter: normalizeValueFilter(state.valueFilter, attributeMap, attributeValueMap),
                             rowOrder: state.rowOrder ? String(state.rowOrder) : currentState.rowOrder,
                             colOrder: state.colOrder ? String(state.colOrder) : currentState.colOrder
                         }));

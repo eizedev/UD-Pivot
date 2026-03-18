@@ -8,28 +8,37 @@ import "react-pivottable/pivottable.css";
 /*
  * Combine default table renderers with Plotly-based renderers.
  *
- * This enables additional visualizations such as bar charts, line charts,
- * pie charts and other Plotly-based renderers on top of the default table output.
+ * This keeps the standard table-based output available while also enabling
+ * the additional Plotly chart renderers in the renderer dropdown.
  */
 const PlotlyRenderers = createPlotlyRenderers(Plot);
 const DefaultRenderers = Object.assign({}, TableRenderers, PlotlyRenderers);
 
 /*
  * Normalize arrays that should contain attribute names.
+ *
+ * PowerShell input may contain null values, duplicates or values that are not
+ * plain JavaScript strings. PivotTableUI compares attribute names directly,
+ * therefore this normalization ensures stable and predictable matching.
  */
 function normalizeStringArray(value) {
     if (!Array.isArray(value)) {
         return [];
     }
 
-    return value
-        .filter((item) => item !== null && item !== undefined)
-        .map((item) => String(item));
+    return [...new Set(
+        value
+            .filter((item) => item !== null && item !== undefined)
+            .map((item) => String(item))
+    )];
 }
 
 /*
- * Build a lookup from lower-case attribute names to the real attribute names
- * found in the dataset.
+ * Build a case-insensitive lookup from dataset keys to their actual names.
+ *
+ * PowerShell presets may use attribute names with different casing than the
+ * serialized dataset. This lookup allows preset values such as "Team" to map
+ * correctly to data keys such as "team".
  */
 function buildAttributeMap(data) {
     const attributeMap = {};
@@ -58,8 +67,8 @@ function buildAttributeMap(data) {
 /*
  * Resolve attribute names against the actual dataset keys.
  *
- * This allows PowerShell presets such as "Team" or "Status" to map correctly
- * to serialized data keys such as "team" or "status".
+ * This ensures that preset properties and interactive changes always reference
+ * the same attribute names that exist in the dataset used by PivotTableUI.
  */
 function resolveAttributeNames(values, attributeMap) {
     return normalizeStringArray(values).map((value) => {
@@ -69,7 +78,11 @@ function resolveAttributeNames(values, attributeMap) {
 }
 
 /*
- * Normalize the value filter object and resolve its keys against the actual dataset keys.
+ * Normalize the valueFilter object and resolve attribute names against the dataset.
+ *
+ * PivotTableUI expects a plain object keyed by attribute names. The filter keys
+ * must match the actual dataset keys, otherwise the filter state appears in the
+ * UI but does not apply correctly to the underlying data.
  */
 function normalizeValueFilter(value, attributeMap) {
     if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -100,6 +113,9 @@ function normalizeValueFilter(value, attributeMap) {
 export default function PivotTable(props) {
     /*
      * Normalize stable input properties.
+     *
+     * These properties are not part of the interactive pivot state returned by
+     * PivotTableUI and should therefore be derived directly from the incoming props.
      */
     const safeData = Array.isArray(props.data) ? props.data : [];
     const safeRenderers = props.renderers || DefaultRenderers;
@@ -107,12 +123,16 @@ export default function PivotTable(props) {
     const safeUnusedOrientationCutoff = Number.isInteger(props.unusedOrientationCutoff) ? props.unusedOrientationCutoff : 85;
 
     /*
-     * Build a case-insensitive attribute lookup based on the incoming dataset.
+     * Build a case-insensitive lookup based on the current dataset.
+     *
+     * This lookup is reused for preset values, hidden attribute settings and
+     * value filters so that all attribute-based configuration uses the same
+     * resolved dataset keys.
      */
     const attributeMap = useMemo(() => buildAttributeMap(safeData), [safeData]);
 
     /*
-     * Resolve attribute-based props against the actual dataset keys.
+     * Resolve attribute-based UI settings against the actual dataset keys.
      */
     const safeHiddenAttributes = useMemo(
         () => resolveAttributeNames(props.hiddenAttributes, attributeMap),
@@ -130,7 +150,10 @@ export default function PivotTable(props) {
     );
 
     /*
-     * Normalize preset state using the actual dataset keys.
+     * Normalize the preset state received from PowerShell.
+     *
+     * Only interactive pivot configuration is stored in local React state.
+     * Stable inputs such as data and renderer collections are passed directly.
      */
     const normalizedPresetState = useMemo(() => ({
         rows: resolveAttributeNames(props.rows, attributeMap),
@@ -155,21 +178,29 @@ export default function PivotTable(props) {
 
     /*
      * Keep the interactive pivot state locally.
+     *
+     * PivotTableUI is controlled through the current state and returns updated
+     * configuration through onChange. The local state preserves the interactive
+     * layout after drag and drop, filtering and renderer changes.
      */
     const [pivotState, setPivotState] = useState(normalizedPresetState);
 
     /*
      * Reset the local state whenever a new preset arrives from PowerShell.
+     *
+     * This ensures that server-side preset changes are reflected in the UI and
+     * do not remain mixed with a previously edited client-side state.
      */
     useEffect(() => {
         setPivotState(normalizedPresetState);
     }, [normalizedPresetState]);
 
     /*
-     * Render PivotTableUI.
+     * Render PivotTableUI with normalized stable props and interactive state.
+     *
+     * onChange normalizes attribute-based values again so that interactive
+     * changes continue to match the resolved dataset keys.
      */
-    console.log("[UDPivot] props", props);
-    console.log("[UDPivot] pivotState", pivotState);
     return (
         <div id={props.id}>
             <PivotTableUI
@@ -182,7 +213,6 @@ export default function PivotTable(props) {
                 unusedOrientationCutoff={safeUnusedOrientationCutoff}
                 {...pivotState}
                 onChange={(state) => {
-                    console.log("[UDPivot] onChange", state);
                     if (state && typeof state === "object") {
                         setPivotState((currentState) => ({
                             ...currentState,

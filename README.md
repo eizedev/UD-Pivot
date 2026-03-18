@@ -37,23 +37,6 @@ This module enables interactive pivot tables with drag & drop functionality dire
 
 ---
 
-## Background
-
-This project is a **complete rewrite and modernization** of the original:
-
-👉 https://github.com/psDevUK/UD-Pivot
-
-The original module is based on an outdated version of Universal Dashboard and React.
-
-This version:
-
-- updates dependencies to modern React
-- rebuilds the component using current PSU custom component standards
-- ensures compatibility with current PSU versions (5.6.x+ / 2026.x)
-- restores **full renderer support including Plotly charts**
-
----
-
 ## Installation
 
 ### From PowerShell Gallery
@@ -64,8 +47,7 @@ Install-Module -Name UniversalDashboard.Pivot
 
 ### Manual Installation
 
-👉 For detailed setup steps (especially on fresh systems), see:
-[docs/BUILD.md](docs/BUILD.md)
+👉 For detailed setup steps (especially on fresh systems), see: [docs/BUILD.md](docs/BUILD.md)
 
 1. Download or clone this repository
 2. Build the project (see [BUILD](docs\BUILD.md) section)
@@ -153,6 +135,23 @@ New-UDPivot -Id 'pivot-demo' -Data $Data
 ## Style
 
 To suit my personal needs, I used CSS to give the Pivot component a different look and feel. You can see that in the screenshots. You can find the style i used it in [examples\style.css](examples\style.css)
+
+---
+
+## Background
+
+This project is a **complete rewrite and modernization** of the original:
+
+👉 https://github.com/psDevUK/UD-Pivot
+
+The original module is based on an outdated version of Universal Dashboard and React.
+
+This version:
+
+- updates dependencies to modern React
+- rebuilds the component using current PSU custom component standards
+- ensures compatibility with current PSU versions (5.6.x+ / 2026.x)
+- restores **full renderer support including Plotly charts**
 
 ---
 

@@ -1,11 +1,11 @@
 ﻿# UniversalDashboard.Pivot
 
-> Currently under development or in the process of being set up...
-
 A modern PowerShell Universal custom component based on
 [`react-pivottable`](https://github.com/plotly/react-pivottable).
 
 This module enables interactive pivot tables with drag & drop functionality directly inside PowerShell Universal dashboards.
+
+![Showcase](docs\demo.gif)
 
 ---
 
@@ -59,6 +59,9 @@ This version:
 
 ### Build the component
 
+👉 For detailed setup steps (especially on fresh systems), see:
+[docs/BUILD.md](docs/BUILD.md)
+
 Clone the repository and run:
 
 ```
@@ -76,25 +79,6 @@ The final module will be generated in:
 ```
 /output/<version>/
 ```
-
----
-
-### Important: Plotly dependency
-
-This component uses Plotly for chart renderers.
-
-Required npm packages:
-
-```
-npm install --save react-plotly.js plotly.js
-```
-
-These are automatically installed when running `Invoke-Build`.
-
-Note:
-
-- This increases bundle size (~4–5 MB)
-- This is expected behavior due to Plotly
 
 ---
 
@@ -128,7 +112,11 @@ Planned: installation via `Modules` directory or PSGallery.
 
 ### Example
 
-```
+Here is a basic example – more can be found in: 👉 [examples/psu-test-page.ps1](examples/psu-test-page.ps1).
+
+Also check the example gifs/pictures in [docs/](docs/)
+
+```powershell
 $Data = @(
     @{ Team = 'OPS'; Status = 'Open'; Priority = 'High'; Count = 5 }
     @{ Team = 'OPS'; Status = 'Closed'; Priority = 'Low'; Count = 2 }
@@ -136,14 +124,7 @@ $Data = @(
     @{ Team = 'DEV'; Status = 'Closed'; Priority = 'Medium'; Count = 3 }
 )
 
-New-UDPivot `
-    -Id 'pivot-demo' `
-    -Data $Data `
-    -Rows @('Team') `
-    -Cols @('Status') `
-    -Vals @('Count') `
-    -AggregatorName 'Sum' `
-    -RendererName 'Table'
+New-UDPivot -Id 'pivot-demo' -Data $Data
 ```
 
 ---
@@ -200,11 +181,16 @@ New-UDPivot `
 
 ---
 
+## Style
+
+To suit my personal needs, I used CSS to give the Pivot component a different look and feel. You can see that in the screenshots. You can find the style i used it in [examples\style.css](examples\style.css)
+
+---
+
 ## Notes
 
 - Only `Data` is required; all other parameters are optional
 - The component follows the behavior of `react-pivottable`
-- The `Count` aggregator does **not require `Vals`**
 - For numeric aggregation (e.g. Sum), use a value field
 - Plotly renderers are automatically available after build
 
@@ -212,9 +198,7 @@ New-UDPivot `
 
 ## Known Limitations
 
-- Large bundle size due to Plotly (~4–5 MB)
 - Not all `react-pivottable` props exposed yet
-- No export functionality included yet
 - No powershell module will be created / published to gallery (current state)
 
 ---
@@ -223,9 +207,6 @@ New-UDPivot `
 
 - [ ] Add support for additional PivotTableUI props
 - [ ] Reduce bundle size (lazy loading / external Plotly)
-- [ ] Improve styling / theming integration with PSU
-- [ ] Add export functionality (CSV / Excel)
-- [ ] Add full documentation
 
 ---
 

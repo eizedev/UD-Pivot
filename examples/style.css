@@ -1,0 +1,109 @@
+﻿/* -------------------------------------------------------
+   PIVOT
+------------------------------------------------------- */
+
+/* =========================
+   PivotTable Base
+   ========================= */
+
+.pvtUi {
+    font-size: 1.0rem;
+    color: #38393e !important;
+    width: auto;
+    height: auto;
+    text-transform: capitalize;
+}
+
+/* =========================
+   Axis Containers / Values
+   ========================= */
+
+.pvtAxisContainer,
+.pvtVals {
+    background-color: #38393e33 !important;
+    border: 1px solid #38393e54 !important;
+}
+
+/* =========================
+   Attribute Pills
+   ========================= */
+
+.pvtAxisContainer li span.pvtAttr {
+    background: #eeeeee !important;
+    border: 1px solid #38393e54 !important;
+}
+
+/* =========================
+   Dropdowns
+   ========================= */
+
+.pvtDropdownValue {
+    font-size: 1.0rem;
+}
+
+.pvtDropdownCurrent {
+    background-color: #ffffff !important;
+    border: 1px solid #38393e54 !important;
+}
+
+.pvtDropdownMenu {
+    border: 1px solid #38393e54 !important;
+}
+
+.pvtDropdownActiveValue {
+    background-color: #38393e33 !important;
+}
+
+/* =========================
+   Vertical Lists
+   ========================= */
+
+.pvtVertList {
+    vertical-align: top;
+}
+
+/* =========================
+   Selected Filter Entry
+   ========================= */
+
+.pvtCheckContainer p.selected {
+    background-color: #38393e33 !important;
+}
+
+/* =========================
+   Filter Box
+   ========================= */
+
+.pvtFilterBox {
+    width: 320px !important;
+    border: 1px solid #38393e54 !important;
+}
+
+/* =========================
+   Pivot Buttons
+   ========================= */
+
+.pvtButton {
+    background-color: #38393e33 !important;
+    color: #111111 !important;
+}
+
+/* =========================
+   Pivot Table Header Cells
+   ========================= */
+
+table.pvtTable thead tr th,
+table.pvtTable tbody tr th {
+    background-color: #38393e33 !important;
+    border: 1px solid #38393e54 !important;
+    font-family: unset !important;
+    font-size: 10pt;
+}
+
+/* =========================
+   Pivot Table Data Cells
+   ========================= */
+
+table.pvtTable tbody tr td {
+    font-size: 10pt;
+}

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import PivotTableUI from "react-pivottable/PivotTableUI";
 import TableRenderers from "react-pivottable/TableRenderers";
+import createPlotlyRenderers from "react-pivottable/PlotlyRenderers";
+import Plot from "react-plotly.js";
 import "react-pivottable/pivottable.css";
 
 /*
@@ -12,6 +14,15 @@ import "react-pivottable/pivottable.css";
  * The local state is required because PivotTableUI is a "dumb" component
  * that expects the current state to be passed back into it on every change.
  */
+
+/*
+ * Create Plotly-based renderers and merge them with the default table renderers.
+ *
+ * This enables additional chart renderers such as bar, line, scatter and pie.
+ */
+const PlotlyRenderers = createPlotlyRenderers(Plot);
+const DefaultRenderers = Object.assign({}, TableRenderers, PlotlyRenderers);
+
 export default function PivotTable(props) {
     /*
      * Initialize the local pivot state with safe defaults.
@@ -30,7 +41,7 @@ export default function PivotTable(props) {
         vals: Array.isArray(props.vals) ? props.vals : [],
         aggregatorName: props.aggregatorName || "Count",
         rendererName: props.rendererName || "Table",
-        renderers: props.renderers || TableRenderers,
+        renderers: props.renderers || DefaultRenderers,
         valueFilter: props.valueFilter || {},
         hiddenAttributes: Array.isArray(props.hiddenAttributes) ? props.hiddenAttributes : [],
         hiddenFromAggregators: Array.isArray(props.hiddenFromAggregators) ? props.hiddenFromAggregators : [],
@@ -59,7 +70,7 @@ export default function PivotTable(props) {
             vals: Array.isArray(props.vals) ? props.vals : [],
             aggregatorName: props.aggregatorName || "Count",
             rendererName: props.rendererName || "Table",
-            renderers: props.renderers || currentState.renderers || TableRenderers,
+            renderers: props.renderers || currentState.renderers || DefaultRenderers,
             valueFilter: props.valueFilter || currentState.valueFilter || {},
             hiddenAttributes: Array.isArray(props.hiddenAttributes) ? props.hiddenAttributes : [],
             hiddenFromAggregators: Array.isArray(props.hiddenFromAggregators) ? props.hiddenFromAggregators : [],

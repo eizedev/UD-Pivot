@@ -15,6 +15,7 @@ This module enables interactive pivot tables with drag & drop functionality dire
 - Based on the latest `react-pivottable` (React 19 compatible)
 - Works with PowerShell Universal (PSU)
 - Minimal required input: `Data`
+  - Backward compatibility with the old [`UD-Pivot`](https://github.com/psDevUK/UD-Pivot) version is guaranteed; only `-Data` is required
 - Supports:
   - Rows
   - Columns
@@ -22,6 +23,7 @@ This module enables interactive pivot tables with drag & drop functionality dire
   - Aggregations
   - Filtering
   - Sorting
+  - **Plotly charts** (bar, line, pie, scatter, etc.)
 - Accepts PowerShell objects directly
 
 ---
@@ -39,6 +41,7 @@ This version:
 - updates dependencies to modern React
 - rebuilds the component using current PSU custom component standards
 - ensures compatibility with current PSU versions (5.6.x+ / 2026.x)
+- restores **full renderer support including Plotly charts**
 
 ---
 
@@ -73,6 +76,25 @@ The final module will be generated in:
 ```
 /output/<version>/
 ```
+
+---
+
+### Important: Plotly dependency
+
+This component uses Plotly for chart renderers.
+
+Required npm packages:
+
+```
+npm install --save react-plotly.js plotly.js
+```
+
+These are automatically installed when running `Invoke-Build`.
+
+Note:
+
+- This increases bundle size (~4–5 MB)
+- This is expected behavior due to Plotly
 
 ---
 
@@ -138,14 +160,14 @@ New-UDPivot `
 
 ### Core
 
-| Parameter        | Description                            |
-| ---------------- | -------------------------------------- |
-| `Id`             | Component ID                           |
-| `Rows`           | Row fields                             |
-| `Cols`           | Column fields                          |
-| `Vals`           | Value fields                           |
-| `AggregatorName` | Aggregation function (e.g. Count, Sum) |
-| `RendererName`   | Renderer type (e.g. Table)             |
+| Parameter        | Description                                            |
+| ---------------- | ------------------------------------------------------ |
+| `Id`             | Component ID                                           |
+| `Rows`           | Row fields                                             |
+| `Cols`           | Column fields                                          |
+| `Vals`           | Value fields                                           |
+| `AggregatorName` | Aggregation function (e.g. Count, Sum)                 |
+| `RendererName`   | Renderer type (e.g. Table, Bar Chart, Pie Chart, etc.) |
 
 ---
 
@@ -184,13 +206,13 @@ New-UDPivot `
 - The component follows the behavior of `react-pivottable`
 - The `Count` aggregator does **not require `Vals`**
 - For numeric aggregation (e.g. Sum), use a value field
+- Plotly renderers are automatically available after build
 
 ---
 
 ## Known Limitations
 
-- Only table renderer currently enabled
-- Plotly charts not yet integrated
+- Large bundle size due to Plotly (~4–5 MB)
 - Not all `react-pivottable` props exposed yet
 - No export functionality included yet
 - No powershell module will be created / published to gallery (current state)
@@ -200,7 +222,7 @@ New-UDPivot `
 ## Roadmap
 
 - [ ] Add support for additional PivotTableUI props
-- [ ] Add Plotly renderers
+- [ ] Reduce bundle size (lazy loading / external Plotly)
 - [ ] Improve styling / theming integration with PSU
 - [ ] Add export functionality (CSV / Excel)
 - [ ] Add full documentation

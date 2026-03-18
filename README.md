@@ -197,7 +197,7 @@ This version:
 [license-badge]: https://img.shields.io/github/license/eizedev/UD-Pivot.svg
 [license]: LICENSE
 [issues-badge]: https://img.shields.io/github/issues-raw/eizedev/UD-Pivot.svg
-[issues]: https://github.com/eizedev/UniversalDashboard.Pivot/issues
+[issues]: https://github.com/eizedev/UD-Pivot/issues
 [prs-badge]: https://img.shields.io/github/issues-pr/eizedev/UD-Pivot.svg
 [prs-link]: https://github.com/eizedev/UD-Pivot/pulls
 [lastcommit-badge]: https://img.shields.io/github/last-commit/eizedev/UD-Pivot.svg

@@ -49,11 +49,11 @@ Install-Module -Name UniversalDashboard.Pivot
 
 👉 For detailed setup steps (especially on fresh systems), see: [docs/BUILD.md](docs/BUILD.md)
 
-1. Download or clone this repository
-2. Build the project (see [BUILD](docs\BUILD.md) section)
-3. Copy the contents of the `output` folder to your PowerShell Universal modules/components directory or use `Import-Module`:
-  3.1 Components (old way): `<PSU Repository>/Components/UniversalDashboard.Pivot/<version>`
-  3.2 Modules: `<PSU Repository>/Modules/UniversalDashboard.Pivot/<version>`
+- Download or clone this repository
+- Build the project (see [BUILD](docs\BUILD.md) section)
+- Copy the contents of the `output` folder to your PowerShell Universal modules/components directory or use `Import-Module`:
+  - Components (old way): `<PSU Repository>/Components/UniversalDashboard.Pivot/<version>`  
+  - Modules: `<PSU Repository>/Modules/UniversalDashboard.Pivot/<version>`
 
 ```powershell
 Import-Module .\output\UniversalDashboard.Pivot.psd1

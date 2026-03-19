@@ -17,6 +17,8 @@ This module enables interactive pivot tables with drag & drop functionality dire
 
 <img width="922" height="615" alt="psu_reactpivot" src="https://github.com/user-attachments/assets/55866c74-a370-4477-8dcd-16ea82f6f002" />
 
+## Preview
+
 ![Showcase](docs/demo.gif)
 
 ---

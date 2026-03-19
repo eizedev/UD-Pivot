@@ -10,9 +10,12 @@
 | --------------------------------- | ----------------------------- |
 | ![pwsh 5.1+ incl. 7+][pwsh-badge] | ![Platforms][platforms-badge] |
 
+
 A modern PowerShell Universal custom component based on [`react-pivottable`](https://github.com/plotly/react-pivottable).
 
 This module enables interactive pivot tables with drag & drop functionality directly inside PowerShell Universal dashboards.
+
+<img width="922" height="615" alt="psu_reactpivot" src="https://github.com/user-attachments/assets/55866c74-a370-4477-8dcd-16ea82f6f002" />
 
 ![Showcase](docs/demo.gif)
 

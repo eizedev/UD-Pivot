@@ -15,7 +15,7 @@ A modern PowerShell Universal custom component based on [`react-pivottable`](htt
 
 This module enables interactive pivot tables with drag & drop functionality directly inside PowerShell Universal dashboards.
 
-<img width="922" height="615" alt="psu_reactpivot" src="https://github.com/user-attachments/assets/55866c74-a370-4477-8dcd-16ea82f6f002" />
+<img width="1536" height="1024" alt="psu_react_pivottable" src="https://github.com/user-attachments/assets/70b11504-3dac-4f2a-922a-912de0424aee" />
 
 ## Preview
 

@@ -172,7 +172,7 @@ This version:
 ## Known Limitations
 
 - Not all `react-pivottable` props exposed yet
-- No powershell module will be created / published to gallery (current state)
+- No powershell module will be created / published to gallery directly from this repository using actions (current state)
 
 ---
 
